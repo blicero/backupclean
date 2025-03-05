@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-03-05 15:11:29 krylon>
+# Time-stamp: <2025-03-05 17:01:45 krylon>
 #
 # /data/code/python/backupclean/borg.py
 # created on 05. 03. 2025
@@ -17,6 +17,7 @@ backupclean.borg
 (c) 2025 Benjamin Walkenhorst
 """
 
+import logging
 import re
 import subprocess
 from datetime import datetime, timedelta
@@ -87,6 +88,34 @@ class Borg:  # pylint: disable-msg=R0903
             archives.append(b)
 
         return archives
+
+
+class CleanupSchedule:
+    """CleanupSchedule describes which archives should be kept or deleted."""
+
+    __slots__ = [
+        "log",
+        "archives",
+        "daily",
+        "weekly",
+        "monthly",
+    ]
+
+    log: logging.Logger
+    archives: list[Backup]
+    daily: Final[int]
+    weekly: Final[int]
+    monthly: Final[int]
+
+    def __init__(self, d: int, w: int, m: int, archives: list[Backup]) -> None:
+        self.log = common.get_logger("cleanup")
+        self.archives = archives
+        self.daily = d
+        self.weekly = w
+        self.monthly = m
+
+    def prune(self) -> list[Backup]:
+        pass
 
 # Local Variables: #
 # python-indent: 4 #
