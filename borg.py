@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-03-06 18:16:54 krylon>
+# Time-stamp: <2025-03-06 21:26:15 krylon>
 #
 # /data/code/python/backupclean/borg.py
 # created on 05. 03. 2025
@@ -17,11 +17,12 @@ backupclean.borg
 (c) 2025 Benjamin Walkenhorst
 """
 
+import functools
 import logging
 import math
 import re
 import subprocess
-from datetime import date, datetime, timedelta
+from datetime import datetime, timedelta
 from typing import Final
 
 from backupclean import common
@@ -32,6 +33,7 @@ newline: Final[re.Pattern] = re.compile("\n")
 namePat: Final[re.Pattern] = re.compile("^(\\d{4}_\\d{2}_\\d{2})", re.M)
 
 
+@functools.total_ordering
 class Backup:  # pylint: disable-msg=R0903
     """Backup represents a backup archive"""
 
@@ -46,6 +48,30 @@ class Backup:  # pylint: disable-msg=R0903
     def __init__(self, name) -> None:
         self.name = name
         self.date = datetime.strptime(name, datePat)
+
+    def __str__(self) -> str:
+        """Stringify the thang"""
+        return f"::{self.name}"
+
+    def __repr__(self) -> str:
+        """Stringify the thang"""
+        return f"::{self.name}"
+
+    def __lt__(self, other):
+        """Compare the Backup to another"""
+        if not type(other) is type(self):
+            return NotImplemented
+        return self.date < other.date
+
+    def __eq__(self, other):
+        """See if the Backup is equal to another"""
+        if not type(self) is type(other):
+            return NotImplemented
+        return self.date == other.date
+
+    def __hash__(self):
+        """Return a hash value"""
+        return hash(self.name)
 
     def age(self) -> timedelta:
         """Return the age of the Backup as a timedelta object."""
@@ -91,7 +117,7 @@ class Borg:  # pylint: disable-msg=R0903
         return archives
 
 
-class CleanupSchedule:
+class CleanupSchedule:  # pylint: disable-msg=R0903
     """CleanupSchedule describes which archives should be kept or deleted."""
 
     __slots__ = [
@@ -116,10 +142,11 @@ class CleanupSchedule:
         self.monthly = m
 
     def prune(self) -> list[Backup]:
+        """Return the archives to NOT delete."""
         archives = sorted(self.archives, key=lambda x: x.date)
         keepers = set()
-        today: Final[date] = date.today()
-        limit: Final[date] = today - timedelta.days(self.daily)
+        today: Final[datetime] = datetime.today()
+        limit: Final[datetime] = today - timedelta(days=self.daily)
 
         # First we keep the daily archives for the past <self.daily> days.
         for a in archives:
@@ -127,7 +154,7 @@ class CleanupSchedule:
                 archives.remove(a)
                 keepers.add(a)
 
-        by_week = {}
+        by_week: dict = {}
 
         for a in archives:
             dt = a.date.isocalendar()
@@ -138,12 +165,17 @@ class CleanupSchedule:
             by_week[week].append(a)
 
         for w in sorted(by_week.keys(), reverse=True):
-            pass
+            arc = by_week[w][-1]
+            if weeks_since(arc.date) < self.weekly:
+                keepers.add(arc)
+
+        return sorted(keepers, reverse=True)
 
 
-def weeks_since(d1: date, d2: date = None) -> int:
+def weeks_since(d1: datetime, d2: datetime | None = None) -> int:
+    """Return the number of weeks between two dates."""
     if d2 is None:
-        d2 = date.today()
+        d2 = datetime.now()
 
     assert d1 < d2
 
