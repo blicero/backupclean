@@ -1,15 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-03-05 13:32:58 krylon>
+# Time-stamp: <2025-03-06 19:19:04 krylon>
 #
 # /data/code/python/backupclean/common.py
 # created on 29. 12. 2023
 # (c) 2023 Benjamin Walkenhorst
-#
-# This file is part of the Wetterfrosch weather app. It is distributed under the
-# terms of the GNU General Public License 3. See the file LICENSE for details
-# or find a copy online at https://www.gnu.org/licenses/gpl-3.0
-
+# GPL v3!
 """
 backupclean.common
 
@@ -88,8 +84,8 @@ def set_basedir(folder: str) -> None:
 
 def init_app() -> None:
     """Initialize the application environment"""
-    print(f"Create base directory {path.base()}")
     if not os.path.isdir(path.base()):
+        print(f"Create base directory {path.base()}")
         os.mkdir(path.base())
 
 
