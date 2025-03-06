@@ -1,5 +1,5 @@
 # -*- mode: org; fill-column: 78; -*-
-# Time-stamp: <2025-03-06 18:17:24 krylon>
+# Time-stamp: <2025-03-06 21:29:47 krylon>
 #
 #+TAGS: internals(i) ui(u) bug(b) feature(f)
 #+TAGS: database(d) design(e), meditation(m)
@@ -20,16 +20,16 @@
   code.
 ** Timetable
    #+BEGIN: clocktable :scope file :maxlevel 202 :emphasize t
-   #+CAPTION: Clock summary at [2025-03-06 Do 18:17]
+   #+CAPTION: Clock summary at [2025-03-06 Do 21:29]
    | Headline                                        | Time   |        |      |      |
    |-------------------------------------------------+--------+--------+------+------|
-   | *Total time*                                    | *6:02* |        |      |      |
+   | *Total time*                                    | *8:57* |        |      |      |
    |-------------------------------------------------+--------+--------+------+------|
-   | *BackupClean [0/1]*                             | *6:02* |        |      |      |
-   | \_  /Components [0/1]/                          |        | /6:02/ |      |      |
+   | *BackupClean [0/1]*                             | *8:57* |        |      |      |
+   | \_  /Components [0/1]/                          |        | /8:57/ |      |      |
    | \_    Talking to Borg [0/0]                     |        |        | 0:23 |      |
-   | \_    Clean up old backups [0/1]                |        |        | 5:39 |      |
-   | \_      Selecting which backups to delete vs... |        |        |      | 1:31 |
+   | \_    Clean up old backups [0/1]                |        |        | 8:34 |      |
+   | \_      Selecting which backups to delete vs... |        |        |      | 4:26 |
    #+END:
 ** Features [0/0]
    :PROPERTIES:
@@ -73,6 +73,7 @@
     The rest, we group into bins
 **** TODO Selecting which backups to delete vs keep
      :LOGBOOK:
+     CLOCK: [2025-03-06 Do 18:32]--[2025-03-06 Do 21:27] =>  2:55
      CLOCK: [2025-03-06 Do 16:45]--[2025-03-06 Do 18:16] =>  1:31
      :END:
 ** Bugs [0/0]
